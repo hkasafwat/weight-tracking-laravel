@@ -1,0 +1,31 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+  
+  .outer-container {
+    background: repeating-linear-gradient(
+      45deg,
+      #37ae5f,
+      #37ae5f 20px,
+      #46c95a 10px,
+      #46c95a 30px
+    );
+    color: white;
+    font-weight: 900;
+    z-index: 0;
+  }
+  
+  .blue-bg {
+    background: #5064c8;
+    border-color: #5064c8;
+  }
