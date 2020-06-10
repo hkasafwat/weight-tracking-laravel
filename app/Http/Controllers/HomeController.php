@@ -25,4 +25,10 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function submit(Request $request) {
+        // dump($request);
+        return $request;
+        // return response()->json(null, 200);
+    }
 }
