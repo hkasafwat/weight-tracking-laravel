@@ -22,4 +22,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/submit', 'WeightController@store');
-// Route::get('/home', 'WeightController@index');
+Route::get('/weights', 'WeightController@index');

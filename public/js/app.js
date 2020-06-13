@@ -1908,9 +1908,11 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/Chart.js");
-/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _chart_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../chart-data */ "./resources/js/chart-data.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/Chart.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _chart_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../chart-data */ "./resources/js/chart-data.js");
 //
 //
 //
@@ -1921,29 +1923,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      planetChartData: _chart_data__WEBPACK_IMPORTED_MODULE_1__["default"]
+      WeightData: _chart_data__WEBPACK_IMPORTED_MODULE_2__["default"]
     };
   },
   components: {},
   methods: {
     createChart: function createChart(chardId, chartData) {
-      /* eslint-disable no-unused-vars */
       var ctx = document.getElementById(chardId);
-      var myChart = new chart_js__WEBPACK_IMPORTED_MODULE_0___default.a(ctx, {
+      new chart_js__WEBPACK_IMPORTED_MODULE_1___default.a(ctx, {
         type: chartData.type,
         data: chartData.data,
         options: chartData.options
       });
-      /* eslint-enable no-unused-vars */
     }
   },
   mounted: function mounted() {
-    this.createChart("planet-chart", this.planetChartData);
+    var _this = this;
+
+    _chart_data__WEBPACK_IMPORTED_MODULE_2__["default"].then(function (data) {
+      _this.createChart("weight-chart", data);
+    });
   }
 });
 
@@ -1993,7 +1998,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-//
 //
 //
 //
@@ -39781,7 +39785,7 @@ var staticRenderFns = [
           [
             _c("canvas", {
               staticClass: "mx-auto",
-              attrs: { id: "planet-chart" }
+              attrs: { id: "weight-chart" }
             })
           ]
         )
@@ -39903,44 +39907,7 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.fields.weight_type,
-                expression: "fields.weight_type"
-              }
-            ],
-            staticClass:
-              "bg-white text-xl text-black mx-auto p-3 mt-4 border rounded shadow-md w-3/12",
-            attrs: { placeholder: "kg", name: "weight_type" },
-            on: {
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.$set(
-                  _vm.fields,
-                  "weight_type",
-                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                )
-              }
-            }
-          },
-          [
-            _c("option", { attrs: { value: "kg" } }, [_vm._v("kg")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "lb" } }, [_vm._v("lb")])
-          ]
-        )
+        _vm._m(0)
       ]),
       _vm._v(" "),
       _c(
@@ -39985,7 +39952,26 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "select",
+      {
+        staticClass:
+          "bg-white text-xl text-black mx-auto p-3 mt-4 border rounded shadow-md w-3/12",
+        attrs: { placeholder: "kg", name: "weight_type" }
+      },
+      [
+        _c("option", { attrs: { value: "kg" } }, [_vm._v("kg")]),
+        _vm._v(" "),
+        _c("option", { attrs: { value: "lb" } }, [_vm._v("lb")])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -52175,77 +52161,60 @@ var app = new Vue({
 /*!************************************!*\
   !*** ./resources/js/chart-data.js ***!
   \************************************/
-/*! exports provided: planetChartData, weight, default */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "planetChartData", function() { return planetChartData; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "weight", function() { return weight; });
-var planetChartData = {
-  type: 'line',
-  data: {
-    labels: ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'],
-    datasets: [{
-      // one line graph
-      label: 'Number of Moons',
-      data: [0, 0, 1, 2, 67, 62, 27, 14],
-      backgroundColor: ['rgba(54,73,93,.5)', // Blue
-      'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)'],
-      borderColor: ['#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d'],
-      borderWidth: 3
-    }, {
-      // another line graph
-      label: 'Planet Mass (x1,000 km)',
-      data: [4.8, 12.1, 12.7, 6.7, 139.8, 116.4, 50.7, 49.2],
-      backgroundColor: ['rgba(71, 183,132,.5)' // Green
-      ],
-      borderColor: ['#47b784'],
-      borderWidth: 3
-    }]
-  },
-  options: {
-    responsive: true,
-    lineTension: 1,
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true,
-          padding: 25
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var weight = function weight() {
+  return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/weights').then(function (res) {
+    var labels = res.data;
+    var userData = [];
+    var date;
+    labels.forEach(function (item, i) {
+      // console.log(i)
+      date = item.inserted_at;
+      userData[i] = item.weight; // console.log(date)
+      // console.log(userData)
+    });
+    console.log(labels);
+    return {
+      type: 'line',
+      data: {
+        labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        datasets: [{
+          // one line graph
+          label: 'Weight (Week)',
+          data: [userData[0], userData[1], userData[2], userData[3], userData[4], userData[5], userData[6]],
+          backgroundColor: ['rgba(54,73,93,.5)', // Blue
+          'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)'],
+          borderColor: ['#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        lineTension: 1,
+        scales: {
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              beginAtZero: true,
+              padding: 25
+            }
+          }]
         }
-      }]
-    }
-  }
+      }
+    }; // return weight
+  });
 };
-var weight = {
-  type: 'line',
-  data: {
-    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    datasets: [{
-      // one line graph
-      label: 'Weight (Week)',
-      data: [0, 0, 1, 2, 67, 62, 27, 14],
-      backgroundColor: ['rgba(54,73,93,.5)', // Blue
-      'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)'],
-      borderColor: ['#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d'],
-      borderWidth: 2
-    }]
-  },
-  options: {
-    responsive: true,
-    lineTension: 1,
-    scales: {
-      yAxes: [{
-        stacked: true,
-        ticks: {
-          beginAtZero: true,
-          padding: 25
-        }
-      }]
-    }
-  }
-};
-/* harmony default export */ __webpack_exports__["default"] = (weight);
+
+console.log(weight());
+/* harmony default export */ __webpack_exports__["default"] = (weight());
 
 /***/ }),
 

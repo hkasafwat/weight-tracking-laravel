@@ -3,36 +3,37 @@
     <div
       class="bg-white text-black max-w-sm sm:max-w-md mx-auto p-3 h-full border rounded shadow-md"
     >
-      <canvas id="planet-chart" class="mx-auto"></canvas>
+      <canvas id="weight-chart" class="mx-auto"></canvas>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import Chart from "chart.js";
-import planetChartData from "../chart-data";
+import WeightData from "../chart-data";
 
 export default {
   data() {
     return {
-      planetChartData
+      WeightData
     };
   },
   components: {},
   methods: {
     createChart(chardId, chartData) {
-      /* eslint-disable no-unused-vars */
       const ctx = document.getElementById(chardId);
-      const myChart = new Chart(ctx, {
+      new Chart(ctx, {
         type: chartData.type,
         data: chartData.data,
         options: chartData.options
       });
-      /* eslint-enable no-unused-vars */
     }
   },
   mounted() {
-    this.createChart("planet-chart", this.planetChartData);
+    WeightData.then(data => {
+      this.createChart("weight-chart", data);
+    })
   }
 };
 </script>

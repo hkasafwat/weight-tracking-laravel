@@ -16,7 +16,7 @@ class CreateUserWeights extends Migration
         Schema::create('user_weights', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->float('weight', 4, 2);
+            $table->float('weight', 5, 2);
             $table->date('inserted_at');
             $table->timestamps();
         });

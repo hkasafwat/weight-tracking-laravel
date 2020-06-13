@@ -19,7 +19,9 @@ class WeightController extends Controller
      */
     public function index()
     {
-        //
+        // $user_weights = User::find(1)->weights;
+        $user_weights = auth()->user()->weights;
+        return $user_weights;
     }
 
     /**
@@ -49,14 +51,15 @@ class WeightController extends Controller
             $weight->inserted_at = $request->date_value;
 
             $weight->save();
+
+            return 'done';
         }
         catch(\Exception $e){
         // do task when error
             echo $e->getMessage();
-        }
 
-        $user_weights = App\User::find(1)->weights;
-        return $user_weights;
+            return $e->getMessage();
+        }
     }
 
     /**
