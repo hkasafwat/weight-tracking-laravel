@@ -1,23 +1,17 @@
 import axios from "axios";
 
-
-
-const weight = () => axios.get('/weights').then((res) => {
-  let labels = res.data;
+const weight = (data) => axios.get('/weights').then((res) => {
   let userData = [];
-  let date;
+  let weightArr = [];
+  let dateArr = [];
 
-  labels.forEach((item, i) => {
-    // console.log(i)
-
-    date = item.inserted_at;
-    userData[i] = item.weight;
-
-    // console.log(date)
-    // console.log(userData)
+  data.forEach((item, i) => {
+    userData[i] = [item.weight, item.inserted_at];
+    weightArr[i] = item.weight;
+    dateArr[i] = item.inserted_at;
   })
 
-  console.log(labels)
+  console.log(weightArr)
 
   return {
     type: 'line',
@@ -26,7 +20,7 @@ const weight = () => axios.get('/weights').then((res) => {
       datasets: [
         { // one line graph
           label: 'Weight (Week)',
-          data: [userData[0], userData[1], userData[2], userData[3], userData[4], userData[5], userData[6]],
+          data: [...weightArr],
           backgroundColor: [
             'rgba(54,73,93,.5)', // Blue
             'rgba(54,73,93,.5)',
@@ -65,11 +59,6 @@ const weight = () => axios.get('/weights').then((res) => {
       }
     }
   }
-
-  // return weight
 })
 
-console.log(weight())
-
-
-export default weight();
+export default weight;

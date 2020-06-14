@@ -28,12 +28,25 @@ export default {
         data: chartData.data,
         options: chartData.options
       });
+    },
+    weightDataRequest() {
+      return axios.get('/weights').then((res) => {
+        return res.data
+      })
+    },
+    thisWeeksWeight() {
+      let today = new Date();
+      today = today.getDay();
+
+      console.log(today)
     }
   },
   mounted() {
-    WeightData.then(data => {
-      this.createChart("weight-chart", data);
-    })
+    this.weightDataRequest()
+      .then(data => this.WeightData(data))
+      .then(data => this.createChart("weight-chart", data))
+
+    this.thisWeeksWeight();
   }
 };
 </script>

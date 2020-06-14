@@ -1941,14 +1941,27 @@ __webpack_require__.r(__webpack_exports__);
         data: chartData.data,
         options: chartData.options
       });
+    },
+    weightDataRequest: function weightDataRequest() {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/weights').then(function (res) {
+        return res.data;
+      });
+    },
+    thisWeeksWeight: function thisWeeksWeight() {
+      var today = new Date();
+      today = today.getDay();
+      console.log(today);
     }
   },
   mounted: function mounted() {
     var _this = this;
 
-    _chart_data__WEBPACK_IMPORTED_MODULE_2__["default"].then(function (data) {
-      _this.createChart("weight-chart", data);
+    this.weightDataRequest().then(function (data) {
+      return _this.WeightData(data);
+    }).then(function (data) {
+      return _this.createChart("weight-chart", data);
     });
+    this.thisWeeksWeight();
   }
 });
 
@@ -52170,18 +52183,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 
-var weight = function weight() {
+var weight = function weight(data) {
   return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/weights').then(function (res) {
-    var labels = res.data;
     var userData = [];
-    var date;
-    labels.forEach(function (item, i) {
-      // console.log(i)
-      date = item.inserted_at;
-      userData[i] = item.weight; // console.log(date)
-      // console.log(userData)
+    var weightArr = [];
+    var dateArr = [];
+    data.forEach(function (item, i) {
+      userData[i] = [item.weight, item.inserted_at];
+      weightArr[i] = item.weight;
+      dateArr[i] = item.inserted_at;
     });
-    console.log(labels);
+    console.log(weightArr);
     return {
       type: 'line',
       data: {
@@ -52189,7 +52201,7 @@ var weight = function weight() {
         datasets: [{
           // one line graph
           label: 'Weight (Week)',
-          data: [userData[0], userData[1], userData[2], userData[3], userData[4], userData[5], userData[6]],
+          data: [].concat(weightArr),
           backgroundColor: ['rgba(54,73,93,.5)', // Blue
           'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)'],
           borderColor: ['#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d'],
@@ -52209,12 +52221,11 @@ var weight = function weight() {
           }]
         }
       }
-    }; // return weight
+    };
   });
 };
 
-console.log(weight());
-/* harmony default export */ __webpack_exports__["default"] = (weight());
+/* harmony default export */ __webpack_exports__["default"] = (weight);
 
 /***/ }),
 
