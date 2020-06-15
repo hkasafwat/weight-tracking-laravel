@@ -1947,19 +1947,66 @@ __webpack_require__.r(__webpack_exports__);
         return res.data;
       });
     },
-    thisWeeksWeight: function thisWeeksWeight() {
+    thisWeeksWeight: function thisWeeksWeight(data) {
       var today = new Date();
       today = today.getDay();
-      console.log(today);
+      var date = 0;
+      var userData = [];
+      var weightArr = [];
+      var dateArr = [];
+      var days = [];
+      data.forEach(function (item, i) {
+        userData[i] = [item.weight, item.inserted_at];
+        weightArr[i] = item.weight;
+        dateArr[i] = item.inserted_at; // console.log(new Date(dateArr[i]).getDay())
+
+        date = new Date(dateArr[i]).getDay();
+        console.log(date, weightArr[i]);
+
+        switch (date) {
+          case 0:
+            days[0] = weightArr[i];
+            break;
+
+          case 1:
+            days[1] = weightArr[i];
+            break;
+
+          case 2:
+            days[2] = weightArr[i];
+            break;
+
+          case 3:
+            days[3] = weightArr[i];
+            break;
+
+          case 4:
+            days[4] = weightArr[i];
+            break;
+
+          case 5:
+            days[5] = weightArr[i];
+            break;
+
+          case 6:
+            days[6] = weightArr[i];
+            break;
+
+          default:
+        }
+      });
+      console.log(days);
+      return days;
     }
   },
   mounted: function mounted() {
     var _this = this;
 
     this.weightDataRequest().then(function (data) {
+      data = _this.thisWeeksWeight(data);
       return _this.WeightData(data);
     }).then(function (data) {
-      return _this.createChart("weight-chart", data);
+      _this.createChart("weight-chart", data);
     });
     this.thisWeeksWeight();
   }
@@ -52181,19 +52228,23 @@ var app = new Vue({
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 
 
 var weight = function weight(data) {
   return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/weights').then(function (res) {
-    var userData = [];
-    var weightArr = [];
-    var dateArr = [];
-    data.forEach(function (item, i) {
-      userData[i] = [item.weight, item.inserted_at];
-      weightArr[i] = item.weight;
-      dateArr[i] = item.inserted_at;
-    });
-    console.log(weightArr);
+    // console.log(weightArr)
     return {
       type: 'line',
       data: {
@@ -52201,7 +52252,7 @@ var weight = function weight(data) {
         datasets: [{
           // one line graph
           label: 'Weight (Week)',
-          data: [].concat(weightArr),
+          data: _toConsumableArray(data),
           backgroundColor: ['rgba(54,73,93,.5)', // Blue
           'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)'],
           borderColor: ['#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d'],
@@ -52454,8 +52505,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /mnt/c/Users/Hisham/Documents/projects/weight-tracking-laravel/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /mnt/c/Users/Hisham/Documents/projects/weight-tracking-laravel/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/hisham/Documents/projects/weight-tracking-laravel/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/hisham/Documents/projects/weight-tracking-laravel/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
