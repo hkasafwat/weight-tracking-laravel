@@ -23,3 +23,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/submit', 'WeightController@store');
 Route::get('/weights', 'WeightController@index');
+Route::get('/thisWeek', 'WeightController@thisWeek');

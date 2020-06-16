@@ -3,7 +3,7 @@ import axios from "axios";
 const weight = (data) => axios.get('/weights').then((res) => {
   
 
-  // console.log(weightArr)
+  console.log(data)
 
   return {
     type: 'line',

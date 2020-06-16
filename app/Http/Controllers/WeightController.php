@@ -106,4 +106,11 @@ class WeightController extends Controller
     {
         //
     }
+
+    public function thisWeek() {
+        $user_id = auth()->user()->id;
+        $weight = new Weight;
+        $weight->thisWeek($user_id);
+        return $weight->thisWeek($user_id);
+    }
 }

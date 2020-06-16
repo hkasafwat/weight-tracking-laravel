@@ -1926,6 +1926,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1948,67 +1949,33 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     thisWeeksWeight: function thisWeeksWeight(data) {
-      var today = new Date();
-      today = today.getDay();
-      var date = 0;
-      var userData = [];
-      var weightArr = [];
-      var dateArr = [];
-      var days = [];
-      data.forEach(function (item, i) {
-        userData[i] = [item.weight, item.inserted_at];
-        weightArr[i] = item.weight;
-        dateArr[i] = item.inserted_at; // console.log(new Date(dateArr[i]).getDay())
-
-        date = new Date(dateArr[i]).getDay();
-        console.log(date, weightArr[i]);
-
-        switch (date) {
-          case 0:
-            days[0] = weightArr[i];
-            break;
-
-          case 1:
-            days[1] = weightArr[i];
-            break;
-
-          case 2:
-            days[2] = weightArr[i];
-            break;
-
-          case 3:
-            days[3] = weightArr[i];
-            break;
-
-          case 4:
-            days[4] = weightArr[i];
-            break;
-
-          case 5:
-            days[5] = weightArr[i];
-            break;
-
-          case 6:
-            days[6] = weightArr[i];
-            break;
-
-          default:
-        }
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/thisWeek').then(function (res) {
+        return res.data;
       });
-      console.log(days);
-      return days;
     }
   },
   mounted: function mounted() {
     var _this = this;
 
-    this.weightDataRequest().then(function (data) {
-      data = _this.thisWeeksWeight(data);
+    // this.weightDataRequest()
+    //   .then(data => {
+    //     data = this.thisWeeksWeight(data);
+    //     return this.WeightData(data)
+    //   })
+    //   .then(data => {
+    //     this.createChart("weight-chart", data)
+    //   })
+    this.thisWeeksWeight().then(function (data) {
+      var weightArray = [];
+      data.forEach(function (element, i) {
+        weightArray[i] = element["weight"];
+      });
+      return weightArray;
+    }).then(function (data) {
       return _this.WeightData(data);
     }).then(function (data) {
-      _this.createChart("weight-chart", data);
+      return _this.createChart("weight-chart", data);
     });
-    this.thisWeeksWeight();
   }
 });
 
@@ -52244,7 +52211,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var weight = function weight(data) {
   return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/weights').then(function (res) {
-    // console.log(weightArr)
+    console.log(data);
     return {
       type: 'line',
       data: {
@@ -52505,8 +52472,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/hisham/Documents/projects/weight-tracking-laravel/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/hisham/Documents/projects/weight-tracking-laravel/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /mnt/c/Users/Hisham/Documents/projects/weight-tracking-laravel/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /mnt/c/Users/Hisham/Documents/projects/weight-tracking-laravel/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
