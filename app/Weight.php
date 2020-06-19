@@ -16,8 +16,8 @@ class Weight extends Model
 
     public function getByWeek($id, $weeks = 0)
     {      
-        $startOfWeek = date("Y-m-d", strtotime(Carbon::now()->startOfWeek()->addWeeks($weeks)));
-        $endOfWeek = date("Y-m-d", strtotime(Carbon::now()->endOfWeek()->addWeeks($weeks)));
+        $startOfWeek = date("d-m-Y", strtotime(Carbon::now()->startOfWeek()->addWeeks($weeks)));
+        $endOfWeek = date("d-m-Y", strtotime(Carbon::now()->endOfWeek()->addWeeks($weeks)));
 
         return [$this
         ->where('user_id', '=', $id)
