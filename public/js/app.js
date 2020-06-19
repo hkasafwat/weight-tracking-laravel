@@ -1923,6 +1923,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1930,7 +1942,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      WeightData: _chart_data__WEBPACK_IMPORTED_MODULE_2__["default"]
+      WeightData: _chart_data__WEBPACK_IMPORTED_MODULE_2__["default"],
+      count: 0
     };
   },
   components: {},
@@ -1943,39 +1956,68 @@ __webpack_require__.r(__webpack_exports__);
         options: chartData.options
       });
     },
-    weightDataRequest: function weightDataRequest() {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/weights').then(function (res) {
+    getWeightByWeek: function getWeightByWeek() {
+      var week = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/thisWeek", {
+        params: {
+          week: week
+        }
+      }).then(function (res) {
         return res.data;
+      })["catch"](function (err) {
+        console.log(err);
       });
     },
-    thisWeeksWeight: function thisWeeksWeight(data) {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/thisWeek').then(function (res) {
-        return res.data;
+    getGraph: function getGraph(count) {
+      var _this = this;
+
+      this.getWeightByWeek(this.count).then(function (data) {
+        var weightArr = [];
+        var days = [];
+        data[0].forEach(function (item, i) {
+          weightArr[i] = item.weight;
+          var date = new Date(item.inserted_at).getDay();
+
+          switch (date) {
+            case 1:
+              days[0] = weightArr[i];
+              break;
+
+            case 2:
+              days[1] = weightArr[i];
+              break;
+
+            case 3:
+              days[2] = weightArr[i];
+              break;
+
+            case 4:
+              days[3] = weightArr[i];
+              break;
+
+            case 5:
+              days[4] = weightArr[i];
+              break;
+
+            case 6:
+              days[5] = weightArr[i];
+              break;
+
+            case 0:
+              days[6] = weightArr[i];
+              break;
+          }
+        });
+        return [days, data[1], data[2]];
+      }).then(function (data) {
+        return _this.WeightData(data);
+      }).then(function (data) {
+        return _this.createChart("weight-chart", data);
       });
     }
   },
   mounted: function mounted() {
-    var _this = this;
-
-    // this.weightDataRequest()
-    //   .then(data => {
-    //     data = this.thisWeeksWeight(data);
-    //     return this.WeightData(data)
-    //   })
-    //   .then(data => {
-    //     this.createChart("weight-chart", data)
-    //   })
-    this.thisWeeksWeight().then(function (data) {
-      var weightArray = [];
-      data.forEach(function (element, i) {
-        weightArray[i] = element["weight"];
-      });
-      return weightArray;
-    }).then(function (data) {
-      return _this.WeightData(data);
-    }).then(function (data) {
-      return _this.createChart("weight-chart", data);
-    });
+    this.getGraph(this.count);
   }
 });
 
@@ -2063,14 +2105,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2080,6 +2114,11 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    submitTodaysDate: function submitTodaysDate() {
+      var d = new Date();
+      var date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+      this.fields.date_value = date;
+    },
     submit: function submit() {
       var _this = this;
 
@@ -39789,7 +39828,46 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    {
+      staticClass:
+        "outer-container max-w-sm sm:max-w-md mx-auto mt-4 p-3 border rounded shadow-md"
+    },
+    [
+      _c("div", { staticClass: "flex flex-row" }, [
+        _c(
+          "button",
+          {
+            staticClass: "mx-auto",
+            on: {
+              click: function($event) {
+                return _vm.getGraph(_vm.count--)
+              }
+            }
+          },
+          [_vm._v("back")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "mx-auto",
+            on: {
+              click: function($event) {
+                return _vm.getGraph(_vm.count++)
+              }
+            }
+          },
+          [_vm._v("forward")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._m(1)
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -39800,22 +39878,26 @@ var staticRenderFns = [
       "div",
       {
         staticClass:
-          "outer-container max-w-sm sm:max-w-md mx-auto mt-4 p-3 border rounded shadow-md"
+          "bg-white text-black max-w-sm sm:max-w-md mx-auto p-3 h-full border rounded shadow-md"
+      },
+      [_c("canvas", { staticClass: "mx-auto", attrs: { id: "weight-chart" } })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "select",
+      {
+        staticClass:
+          "bg-white text-xl text-black mx-auto p-3 mt-4 border rounded shadow-md w-4/12",
+        attrs: { placeholder: "kg", name: "weight_type" }
       },
       [
-        _c(
-          "div",
-          {
-            staticClass:
-              "bg-white text-black max-w-sm sm:max-w-md mx-auto p-3 h-full border rounded shadow-md"
-          },
-          [
-            _c("canvas", {
-              staticClass: "mx-auto",
-              attrs: { id: "weight-chart" }
-            })
-          ]
-        )
+        _c("option", { attrs: { value: "kg" } }, [_vm._v("kg")]),
+        _vm._v(" "),
+        _c("option", { attrs: { value: "lb" } }, [_vm._v("lb")])
       ]
     )
   }
@@ -39893,6 +39975,7 @@ var render = function() {
     {
       staticClass:
         "outer-container max-w-sm sm:max-w-md mx-auto p-3 mt-4 border rounded shadow-md",
+      attrs: { autocomplete: "nope" },
       on: {
         submit: function($event) {
           $event.preventDefault()
@@ -39921,7 +40004,7 @@ var render = function() {
             }
           ],
           staticClass:
-            "bg-white text-xl text-center text-black mx-auto mt-4 p-3 border rounded shadow-md w-9/12 mr-2",
+            "bg-white text-xl text-center text-black mx-auto mt-4 p-3 border rounded shadow-md w-full mr-2",
           attrs: { placeholder: "Enter Weight", name: "weight", required: "" },
           domProps: { value: _vm.fields.weight },
           on: {
@@ -39932,9 +40015,7 @@ var render = function() {
               _vm.$set(_vm.fields, "weight", $event.target.value)
             }
           }
-        }),
-        _vm._v(" "),
-        _vm._m(0)
+        })
       ]),
       _vm._v(" "),
       _c(
@@ -39946,7 +40027,21 @@ var render = function() {
         [_vm._v("Enter A Date")]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "flex flex-col" }, [
+      _c("div", { staticClass: "flex flex-row" }, [
+        _c(
+          "button",
+          {
+            staticClass:
+              "blue-bg text-xl text-white w-6/12 text-center max-w-sm sm:max-w-md mx-auto px-6 py-3 mt-4 border rounded shadow-md",
+            on: {
+              click: function($event) {
+                return _vm.submitTodaysDate(_vm.el)
+              }
+            }
+          },
+          [_vm._v("Today")]
+        ),
+        _vm._v(" "),
         _c("input", {
           directives: [
             {
@@ -39957,8 +40052,8 @@ var render = function() {
             }
           ],
           staticClass:
-            "bg-white text-xl text-center text-black p-3 mx-auto mt-4 border rounded shadow-md w-full",
-          attrs: { type: "date", name: "date_value", required: "" },
+            "bg-white text-xl text-center text-black p-3 mx-auto ml-2 mt-4 border rounded shadow-md w-6/12",
+          attrs: { type: "date", name: "date_value" },
           domProps: { value: _vm.fields.date_value },
           on: {
             input: function($event) {
@@ -39979,26 +40074,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "select",
-      {
-        staticClass:
-          "bg-white text-xl text-black mx-auto p-3 mt-4 border rounded shadow-md w-3/12",
-        attrs: { placeholder: "kg", name: "weight_type" }
-      },
-      [
-        _c("option", { attrs: { value: "kg" } }, [_vm._v("kg")]),
-        _vm._v(" "),
-        _c("option", { attrs: { value: "lb" } }, [_vm._v("lb")])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -52218,8 +52294,8 @@ var weight = function weight(data) {
         labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
         datasets: [{
           // one line graph
-          label: 'Weight (Week)',
-          data: _toConsumableArray(data),
+          label: "Weight (Week ".concat(data[1], " - ").concat(data[2], ")"),
+          data: _toConsumableArray(data[0]),
           backgroundColor: ['rgba(54,73,93,.5)', // Blue
           'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)'],
           borderColor: ['#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d'],

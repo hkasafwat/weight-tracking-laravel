@@ -1,8 +1,6 @@
 import axios from "axios";
 
 const weight = (data) => axios.get('/weights').then((res) => {
-  
-
   console.log(data)
 
   return {
@@ -11,8 +9,8 @@ const weight = (data) => axios.get('/weights').then((res) => {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
       datasets: [
         { // one line graph
-          label: 'Weight (Week)',
-          data: [...data],
+          label: `Weight (Week ${data[1]} - ${data[2]})`,
+          data: [...data[0]],
           backgroundColor: [
             'rgba(54,73,93,.5)', // Blue
             'rgba(54,73,93,.5)',

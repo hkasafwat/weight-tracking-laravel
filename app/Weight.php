@@ -14,11 +14,16 @@ class Weight extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function thisWeek($id)
-    {   
-        return $this
+    public function getByWeek($id, $weeks = 0)
+    {      
+        $startOfWeek = date("Y-m-d", strtotime(Carbon::now()->startOfWeek()->addWeeks($weeks)));
+        $endOfWeek = date("Y-m-d", strtotime(Carbon::now()->endOfWeek()->addWeeks($weeks)));
+
+        return [$this
         ->where('user_id', '=', $id)
-        ->whereBetween('inserted_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->get();
+        ->whereBetween('inserted_at', [Carbon::now()->startOfWeek()->addWeeks($weeks), Carbon::now()->endOfWeek()->addWeeks($weeks)])->get()
+        , $startOfWeek
+        , $endOfWeek ];
     }
 
     public function thisMonth($id) {

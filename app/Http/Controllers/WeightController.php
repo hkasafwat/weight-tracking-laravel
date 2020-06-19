@@ -107,10 +107,11 @@ class WeightController extends Controller
         //
     }
 
-    public function thisWeek() {
+    public function getByWeek(Request $request) {
+        
         $user_id = auth()->user()->id;
         $weight = new Weight;
-        $weight->thisWeek($user_id);
-        return $weight->thisWeek($user_id);
+        
+        return $weight->getByWeek($user_id, $request->week);
     }
 }
