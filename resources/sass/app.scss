@@ -4,8 +4,11 @@
 
 @import "tailwindcss/utilities";
 
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Lobster', Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
@@ -13,19 +16,22 @@
   }
   
   .outer-container {
-    background: repeating-linear-gradient(
-      45deg,
-      #37ae5f,
-      #37ae5f 20px,
-      #46c95a 10px,
-      #46c95a 30px
-    );
+    // background: repeating-linear-gradient(
+    //   45deg,
+    //  ,
+    //   #37ae5f 20px,
+    //   #46c95a 10px,
+    //   #46c95a 30px
+    // );
+    background: linear-gradient(45deg, #FFCA58, #eaa717);
     color: white;
-    font-weight: 900;
     z-index: 0;
   }
   
-  .blue-bg {
-    background: #5064c8;
-    border-color: #5064c8;
+  .button-bg {
+    background: linear-gradient(45deg, #AE3786, #88326b) ;
+  }
+
+  button.button-bg:hover, input.button-bg:hover, a.button-bg:hover {
+    background: linear-gradient(45deg, #af1e7f, #881963) ;
   }

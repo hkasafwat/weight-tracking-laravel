@@ -42,6 +42,12 @@ class WeightController extends Controller
      */
     public function store(Request $request)
     {
+
+        $validatedData = $request->validate([
+            'weight' => 'required',
+            'date_value' => 'required'
+        ]);
+
         try {
             $user = auth()->user();
             $weight = new Weight;
@@ -55,9 +61,6 @@ class WeightController extends Controller
             return 'done';
         }
         catch(\Exception $e){
-        // do task when error
-            echo $e->getMessage();
-
             return $e->getMessage();
         }
     }

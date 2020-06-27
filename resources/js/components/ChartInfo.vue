@@ -1,22 +1,23 @@
 <template>
-  <div class="outer-container max-w-sm sm:max-w-md mx-auto mt-4 p-3 border rounded shadow-md">
+  <div class="outer-container max-w-sm sm:max-w-md md:max-w-lg mx-auto p-3 mt-4 rounded shadow-md">
     <div class="flex flex-row">
-      <button @click="getGraph(count--)" class="mx-auto">back</button>
-      <button @click="getGraph(count++)" class="mx-auto">forward</button>
-    </div>
-    <div
-      class="bg-white text-black max-w-sm sm:max-w-md mx-auto p-3 h-full border rounded shadow-md"
-    >
-      <canvas id="weight-chart" class="mx-auto"></canvas>
-    </div>
-    <select
-      class="bg-white text-xl text-black mx-auto p-3 mt-4 border rounded shadow-md w-4/12"
+      <button @click="getGraph(count--)" class="button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md mr-auto px-4 py-2 mb-3  rounded shadow-md">Back</button>
+      <select
+      class="bg-white text-xl text-center text-black mx-auto p-4 mb-3  rounded shadow-md w-3/12"
       placeholder="kg"
       name="weight_type"
+      >
+        <option value="kg">kg</option>
+        <option value="lb">lb</option>
+      </select>
+      <button @click="getGraph(count++)" class="button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md ml-auto px-4 py-2 mb-3  rounded shadow-md">Forward</button>
+    </div>
+    <div
+      class="bg-white text-black max-w-sm sm:max-w-md md:max-w-lg mx-auto p-3 h-full rounded shadow-md"  
     >
-      <option value="kg">kg</option>
-      <option value="lb">lb</option>
-    </select>
+      <div class="lds-ring mx-auto"><div></div><div></div><div></div><div></div></div>
+      <canvas id="weight-chart" class="mx-auto hidden"></canvas>
+    </div>
   </div>
 </template>
 
@@ -55,6 +56,9 @@ export default {
       });
     },
     getGraph(count) {
+      document.querySelector('.lds-ring').style.display = 'block';
+      document.querySelector('#weight-chart').style.display = 'none';
+      
       this.getWeightByWeek(this.count)
       .then(data => {
         let weightArr = [];
@@ -95,17 +99,57 @@ export default {
           }
         });
 
-        return [days, data[1], data[2]];
-      })
-      .then(data => this.WeightData(data))
-      .then(data => this.createChart("weight-chart", data));
+        document.querySelector('.lds-ring').style.display = 'none';
+        document.querySelector('#weight-chart').style.display = 'block';
+        
+        return this.createChart("weight-chart", this.WeightData(days, data[1], data[2]))
+      });
     }
   },
   mounted() {
     this.getGraph(this.count)
+
+    this.$root.$on('submitted', () => {
+      this.getGraph(this.count)
+    })
   }
 };
 </script>
 
 <style>
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid gray;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: gray transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>

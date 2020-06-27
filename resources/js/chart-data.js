@@ -1,16 +1,12 @@
-import axios from "axios";
-
-const weight = (data) => axios.get('/weights').then((res) => {
-  console.log(data)
-
+const weight = (days, dateFrom, dateTo) =>  {
   return {
     type: 'line',
     data: {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
       datasets: [
         { // one line graph
-          label: `Weight (Week ${data[1]} - ${data[2]})`,
-          data: [...data[0]],
+          label: `Weight (Week: ${dateFrom.replace(/-/g, '/')} - ${dateTo.replace(/-/g, '/')})`,
+          data: [...days],
           backgroundColor: [
             'rgba(54,73,93,.5)', // Blue
             'rgba(54,73,93,.5)',
@@ -43,12 +39,12 @@ const weight = (data) => axios.get('/weights').then((res) => {
           stacked: true,
           ticks: {
             beginAtZero: true,
-            padding: 25,
+            padding: 15,
           }
         }]
       }
     }
   }
-})
+}
 
 export default weight;

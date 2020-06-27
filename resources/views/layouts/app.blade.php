@@ -21,7 +21,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="nav-bar w-full h-18 shadow-md flex flex-row bg-red-600 rounded text-xl px-3 py-2">
+        <nav class="nav-bar text-white w-full h-18 shadow-md flex flex-row bg-red-600 rounded text-xl px-3 py-2" style="background: linear-gradient(45deg, #AE3786, #88326b);">
             <a class="navbar-brand" href="{{ url('/') }}">
                 {{ config('app.name', 'Weight Tracker') }}
             </a>
