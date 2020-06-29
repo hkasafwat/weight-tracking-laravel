@@ -92,7 +92,6 @@ export default {
           date_value: this.fields.date_value
         })
         .then(res => {
-          console.log(res);
           this.$root.$emit("submitted", this.weightType);
         })
         .catch(error => {
