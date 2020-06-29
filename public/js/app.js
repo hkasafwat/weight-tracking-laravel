@@ -1936,6 +1936,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1944,7 +1957,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       WeightData: _chart_data__WEBPACK_IMPORTED_MODULE_2__["default"],
-      count: 0
+      count: 0,
+      GraphWeightType: "kg"
     };
   },
   components: {},
@@ -1972,8 +1986,8 @@ __webpack_require__.r(__webpack_exports__);
     getGraph: function getGraph(count) {
       var _this = this;
 
-      document.querySelector('.lds-ring').style.display = 'block';
-      document.querySelector('#weight-chart').style.display = 'none';
+      document.querySelector(".lds-ring").style.display = "block";
+      document.querySelector("#weight-chart").style.display = "none";
       this.getWeightByWeek(this.count).then(function (data) {
         var weightArr = [];
         var days = [];
@@ -2011,19 +2025,34 @@ __webpack_require__.r(__webpack_exports__);
               break;
           }
         });
-        document.querySelector('.lds-ring').style.display = 'none';
-        document.querySelector('#weight-chart').style.display = 'block';
-        return _this.createChart("weight-chart", _this.WeightData(days, data[1], data[2]));
+        document.querySelector(".lds-ring").style.display = "none";
+        document.querySelector("#weight-chart").style.display = "block";
+
+        if (_this.GraphWeightType == "lb") {
+          days.forEach(function (el, i) {
+            days[i] = (el * 2.205).toFixed(2);
+          });
+        }
+
+        return _this.createChart("weight-chart", _this.WeightData(days, data[1], data[2], _this.GraphWeightType));
       });
+    },
+    changeWeightType: function changeWeightType(event) {
+      this.$root.$emit("weightTypeChange", event.target.value);
     }
   },
   mounted: function mounted() {
     var _this2 = this;
 
     this.getGraph(this.count);
-    this.$root.$on('submitted', function () {
+    this.$root.$on(["submitted", "weightTypeChange"], function (type) {
+      _this2.GraphWeightType = type;
+
       _this2.getGraph(_this2.count);
-    });
+    }); // this.$root.$on("weightTypeChange", type => {
+    //   this.GraphWeightType = type;
+    //   this.getGraph(this.count);
+    // });
   }
 });
 
@@ -2125,15 +2154,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       fields: {},
       errors: {
-        weight: '',
-        date_value: ''
-      }
+        weight: "",
+        date_value: ""
+      },
+      weightType: "kg"
     };
   },
   methods: {
@@ -2145,12 +2183,15 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       var _this = this;
 
-      document.querySelector('.lds-ring').style.display = 'block';
-      document.querySelector('#weight-chart').style.display = 'none';
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/submit", this.fields).then(function (res) {
-        _this.$root.$emit('submitted', true);
-
+      document.querySelector(".lds-ring").style.display = "block";
+      document.querySelector("#weight-chart").style.display = "none";
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/submit", {
+        weight: this.weightType == "lb" ? (this.fields.weight / 2.205).toFixed(2) : this.fields.weight,
+        date_value: this.fields.date_value
+      }).then(function (res) {
         console.log(res);
+
+        _this.$root.$emit("submitted", _this.weightType);
       })["catch"](function (error) {
         var errorMsg = error.response.data.errors;
 
@@ -2165,11 +2206,17 @@ __webpack_require__.r(__webpack_exports__);
         console.log(errorMsg);
       });
     },
-    reloadPage: function reloadPage() {
-      window.location.reload();
+    changeWeightType: function changeWeightType(event) {
+      this.$root.$emit("weightTypeChange", event.target.value);
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    var _this2 = this;
+
+    this.$root.$on("weightTypeChange", function (type) {
+      _this2.weightType = type;
+    });
+  }
 });
 
 /***/ }),
@@ -40522,7 +40569,7 @@ var render = function() {
           "button",
           {
             staticClass:
-              "button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md mr-auto px-4 py-2 mb-3  rounded shadow-md",
+              "button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md mr-auto px-4 py-2 mb-3 rounded shadow-md",
             on: {
               click: function($event) {
                 return _vm.getGraph(_vm.count--)
@@ -40532,13 +40579,50 @@ var render = function() {
           [_vm._v("Back")]
         ),
         _vm._v(" "),
-        _vm._m(0),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.GraphWeightType,
+                expression: "GraphWeightType"
+              }
+            ],
+            staticClass:
+              "bg-white text-xl text-center text-black mx-auto p-4 mb-3 rounded shadow-md w-3/12",
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.GraphWeightType = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                _vm.changeWeightType
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { value: "kg" } }, [_vm._v("kg")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "lb" } }, [_vm._v("lb")])
+          ]
+        ),
         _vm._v(" "),
         _c(
           "button",
           {
             staticClass:
-              "button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md ml-auto px-4 py-2 mb-3  rounded shadow-md",
+              "button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md ml-auto px-4 py-2 mb-3 rounded shadow-md",
             on: {
               click: function($event) {
                 return _vm.getGraph(_vm.count++)
@@ -40549,29 +40633,11 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _vm._m(1)
+      _vm._m(0)
     ]
   )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "select",
-      {
-        staticClass:
-          "bg-white text-xl text-center text-black mx-auto p-4 mb-3  rounded shadow-md w-3/12",
-        attrs: { placeholder: "kg", name: "weight_type" }
-      },
-      [
-        _c("option", { attrs: { value: "kg" } }, [_vm._v("kg")]),
-        _vm._v(" "),
-        _c("option", { attrs: { value: "lb" } }, [_vm._v("lb")])
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40585,15 +40651,27 @@ var staticRenderFns = [
       [
         _c("div", { staticClass: "lds-ring mx-auto" }, [
           _c("div"),
+          _vm._v(" "),
           _c("div"),
+          _vm._v(" "),
           _c("div"),
+          _vm._v(" "),
           _c("div")
         ]),
         _vm._v(" "),
-        _c("canvas", {
-          staticClass: "mx-auto hidden",
-          attrs: { id: "weight-chart" }
-        })
+        _c(
+          "div",
+          {
+            staticClass: "chart-container",
+            staticStyle: { position: "relative", height: "16rem" }
+          },
+          [
+            _c("canvas", {
+              staticClass: "mx-auto hidden",
+              attrs: { id: "weight-chart" }
+            })
+          ]
+        )
       ]
     )
   }
@@ -40711,7 +40789,46 @@ var render = function() {
               _vm.$set(_vm.fields, "weight", $event.target.value)
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.weightType,
+                expression: "weightType"
+              }
+            ],
+            staticClass:
+              "bg-white text-xl text-center text-black mx-auto p-4 mt-4 rounded shadow-md w-3/12",
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.weightType = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                _vm.changeWeightType
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { value: "kg" } }, [_vm._v("kg")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "lb" } }, [_vm._v("lb")])
+          ]
+        )
       ]),
       _vm._v(" "),
       _vm.errors.weight
@@ -40786,7 +40903,7 @@ var render = function() {
       _vm._v(" "),
       _c("input", {
         staticClass:
-          "button-bg text-2xl text-white w-full text-center max-w-sm sm:max-w-md md:max-w-lg mx-auto px-6 py-3 mt-6 rounded shadow-md",
+          "button-bg cursor-pointer text-2xl text-white w-full text-center max-w-sm sm:max-w-md md:max-w-lg mx-auto px-6 py-3 mt-6 rounded shadow-md",
         attrs: { type: "submit", value: "Submit" }
       })
     ]
@@ -52999,7 +53116,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-var weight = function weight(days, dateFrom, dateTo) {
+var weight = function weight(days, dateFrom, dateTo, weightType) {
   return {
     type: 'line',
     data: {
@@ -53008,13 +53125,13 @@ var weight = function weight(days, dateFrom, dateTo) {
         // one line graph
         label: "Weight (Week: ".concat(dateFrom.replace(/-/g, '/'), " - ").concat(dateTo.replace(/-/g, '/'), ")"),
         data: _toConsumableArray(days),
-        backgroundColor: ['rgba(54,73,93,.5)', // Blue
-        'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)', 'rgba(54,73,93,.5)'],
-        borderColor: ['#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d', '#36495d'],
-        borderWidth: 2
+        backgroundColor: ['rgba(174,55,134,.5)', 'rgba(174,55,134,.5)', 'rgba(174,55,134,.5)', 'rgba(174,55,134,.5)', 'rgba(174,55,134,.5)', 'rgba(174,55,134,.5)', 'rgba(174,55,134,.5)', 'rgba(174,55,134,.5)'],
+        borderColor: ['#af1e7f', '#af1e7f', '#af1e7f', '#af1e7f', '#af1e7f', '#af1e7f', '#af1e7f', '#af1e7f'],
+        borderWidth: 4
       }]
     },
     options: {
+      maintainAspectRatio: false,
       responsive: true,
       lineTension: 1,
       scales: {
@@ -53022,9 +53139,23 @@ var weight = function weight(days, dateFrom, dateTo) {
           stacked: true,
           ticks: {
             beginAtZero: true,
-            padding: 15
+            padding: 10
           }
-        }]
+        }],
+        ticks: {
+          padding: 50
+        }
+      },
+      tooltips: {
+        mode: 'nearest',
+        callbacks: {
+          label: function label(title, data) {
+            var newTitle = "  ".concat(title["value"], " ").concat(weightType, " ");
+            var label = data.datasets[title.datasetIndex].label;
+            label = newTitle;
+            return label;
+          }
+        }
       }
     }
   };

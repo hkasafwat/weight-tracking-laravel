@@ -14,6 +14,14 @@
         name="weight"
         v-model="fields.weight"
       />
+      <select
+        @change="changeWeightType"
+        class="bg-white text-xl text-center text-black mx-auto p-4 mt-4 rounded shadow-md w-3/12"
+        v-model="weightType"
+      >
+        <option value="kg">kg</option>
+        <option value="lb">lb</option>
+      </select>
     </div>
 
     <div
@@ -45,7 +53,7 @@
     <input
       type="submit"
       value="Submit"
-      class="button-bg text-2xl text-white w-full text-center max-w-sm sm:max-w-md md:max-w-lg mx-auto px-6 py-3 mt-6 rounded shadow-md"
+      class="button-bg cursor-pointer text-2xl text-white w-full text-center max-w-sm sm:max-w-md md:max-w-lg mx-auto px-6 py-3 mt-6 rounded shadow-md"
     />
   </form>
 </template>
@@ -58,9 +66,10 @@ export default {
     return {
       fields: {},
       errors: {
-        weight: '',
-        date_value: ''
-      }
+        weight: "",
+        date_value: ""
+      },
+      weightType: "kg"
     };
   },
   methods: {
@@ -71,22 +80,28 @@ export default {
       this.fields.date_value = date;
     },
     submit() {
-      document.querySelector('.lds-ring').style.display = 'block';
-      document.querySelector('#weight-chart').style.display = 'none';
+      document.querySelector(".lds-ring").style.display = "block";
+      document.querySelector("#weight-chart").style.display = "none";
 
       axios
-        .post("/submit", this.fields)
+        .post("/submit", {
+          weight:
+            this.weightType == "lb"
+              ? (this.fields.weight / 2.205).toFixed(2)
+              : this.fields.weight,
+          date_value: this.fields.date_value
+        })
         .then(res => {
-          this.$root.$emit('submitted', true);
-          console.log(res)
+          console.log(res);
+          this.$root.$emit("submitted", this.weightType);
         })
         .catch(error => {
           let errorMsg = error.response.data.errors;
 
-          if(errorMsg["weight"]) {
+          if (errorMsg["weight"]) {
             this.errors.weight = errorMsg["weight"][0];
-          } 
-          
+          }
+
           if (errorMsg["date_value"]) {
             this.errors.date_value = errorMsg["date_value"][0];
           }
@@ -94,11 +109,14 @@ export default {
           console.log(errorMsg);
         });
     },
-    reloadPage() {
-      window.location.reload();
+    changeWeightType(event) {
+      this.$root.$emit("weightTypeChange", event.target.value);
     }
   },
   mounted() {
+    this.$root.$on("weightTypeChange", type => {
+      this.weightType = type;
+    });
   }
 };
 </script>

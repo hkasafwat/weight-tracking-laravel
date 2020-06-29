@@ -36,11 +36,11 @@
         </div>
 
         <div class="flex flex-col">
-            <div class="mx-auto font-bold text-black mt-3 w-4/12">
+            <div class="mx-auto text-lg font-bold text-black mt-3 w-4/12">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
-                    <label class="form-check-label" for="remember">
+                    <label class="" for="remember">
                         {{ __('Remember Me') }}
                     </label>
                 </div>
@@ -48,12 +48,12 @@
         </div>
 
         <div class="flex flex-row mx-auto mt-2 font-bold text-black">
-            <button type="submit" class="button-bg font-bold text-md text-white w-5/12 text-center max-w-sm sm:max-w-md mx-auto px-5 py-3 mt-4 rounded shadow-md">
+            <button type="submit" class="button-bg font-bold text-lg text-white w-5/12 text-center max-w-sm sm:max-w-md mx-auto px-5 py-3 mt-4 rounded shadow-md">
                 {{ __('Login') }}
             </button>
 
             @if (Route::has('password.request'))
-            <a class="button-bg text-md text-white w-5/12 text-center max-w-sm sm:max-w-md mx-auto px-5 py-3 mt-4 rounded shadow-md" href="{{ route('password.request') }}">
+            <a class="button-bg text-lg text-white w-5/12 text-center max-w-sm sm:max-w-md mx-auto px-5 py-3 mt-4 rounded shadow-md" href="{{ route('password.request') }}">
                 {{ __('Forgot Your Password?') }}
             </a>
             @endif

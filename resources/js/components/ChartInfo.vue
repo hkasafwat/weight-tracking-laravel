@@ -1,22 +1,35 @@
 <template>
   <div class="outer-container max-w-sm sm:max-w-md md:max-w-lg mx-auto p-3 mt-4 rounded shadow-md">
     <div class="flex flex-row">
-      <button @click="getGraph(count--)" class="button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md mr-auto px-4 py-2 mb-3  rounded shadow-md">Back</button>
+      <button
+        @click="getGraph(count--)"
+        class="button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md mr-auto px-4 py-2 mb-3 rounded shadow-md"
+      >Back</button>
       <select
-      class="bg-white text-xl text-center text-black mx-auto p-4 mb-3  rounded shadow-md w-3/12"
-      placeholder="kg"
-      name="weight_type"
+        @change="changeWeightType"
+        class="bg-white text-xl text-center text-black mx-auto p-4 mb-3 rounded shadow-md w-3/12"
+        v-model="GraphWeightType"
       >
         <option value="kg">kg</option>
         <option value="lb">lb</option>
       </select>
-      <button @click="getGraph(count++)" class="button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md ml-auto px-4 py-2 mb-3  rounded shadow-md">Forward</button>
+      <button
+        @click="getGraph(count++)"
+        class="button-bg text-xl text-white w-4/12 text-center max-w-sm sm:max-w-md ml-auto px-4 py-2 mb-3 rounded shadow-md"
+      >Forward</button>
     </div>
     <div
-      class="bg-white text-black max-w-sm sm:max-w-md md:max-w-lg mx-auto p-3 h-full rounded shadow-md"  
+      class="bg-white text-black max-w-sm sm:max-w-md md:max-w-lg mx-auto p-3 h-full rounded shadow-md"
     >
-      <div class="lds-ring mx-auto"><div></div><div></div><div></div><div></div></div>
-      <canvas id="weight-chart" class="mx-auto hidden"></canvas>
+      <div class="lds-ring mx-auto">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="chart-container" style="position: relative; height: 16rem">
+        <canvas id="weight-chart" class="mx-auto hidden"></canvas>
+      </div>
     </div>
   </div>
 </template>
@@ -31,7 +44,8 @@ export default {
   data() {
     return {
       WeightData,
-      count: 0
+      count: 0,
+      GraphWeightType: "kg"
     };
   },
   components: {},
@@ -45,22 +59,24 @@ export default {
       });
     },
     getWeightByWeek(week = 0) {
-      return axios.get("/thisWeek", {
-        params: {
-          week: week
-        }
-      }).then(res => {
+      return axios
+        .get("/thisWeek", {
+          params: {
+            week: week
+          }
+        })
+        .then(res => {
           return res.data;
-      }).catch(err => {
-        console.log(err)
-      });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     getGraph(count) {
-      document.querySelector('.lds-ring').style.display = 'block';
-      document.querySelector('#weight-chart').style.display = 'none';
-      
-      this.getWeightByWeek(this.count)
-      .then(data => {
+      document.querySelector(".lds-ring").style.display = "block";
+      document.querySelector("#weight-chart").style.display = "none";
+
+      this.getWeightByWeek(this.count).then(data => {
         let weightArr = [];
         let days = [];
 
@@ -99,19 +115,37 @@ export default {
           }
         });
 
-        document.querySelector('.lds-ring').style.display = 'none';
-        document.querySelector('#weight-chart').style.display = 'block';
-        
-        return this.createChart("weight-chart", this.WeightData(days, data[1], data[2]))
+        document.querySelector(".lds-ring").style.display = "none";
+        document.querySelector("#weight-chart").style.display = "block";
+
+        if (this.GraphWeightType == "lb") {
+          days.forEach((el, i) => {
+            days[i] = (el * 2.205).toFixed(2);
+          })
+        }
+
+        return this.createChart(
+          "weight-chart",
+          this.WeightData(days, data[1], data[2], this.GraphWeightType)
+        );
       });
+    },
+    changeWeightType(event) {
+      this.$root.$emit("weightTypeChange", event.target.value);
     }
   },
   mounted() {
-    this.getGraph(this.count)
+    this.getGraph(this.count);
 
-    this.$root.$on('submitted', () => {
-      this.getGraph(this.count)
-    })
+    this.$root.$on(["submitted", "weightTypeChange"], type => {
+      this.GraphWeightType = type;
+      this.getGraph(this.count);
+    });
+
+    // this.$root.$on("weightTypeChange", type => {
+    //   this.GraphWeightType = type;
+    //   this.getGraph(this.count);
+    // });
   }
 };
 </script>
